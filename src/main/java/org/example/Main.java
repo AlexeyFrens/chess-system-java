@@ -1,6 +1,5 @@
 package org.example;
 
-import org.example.boardGame.Board;
 import org.example.chess.ChessMatch;
 
 public class Main {
