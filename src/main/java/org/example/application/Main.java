@@ -19,6 +19,7 @@ public class Main {
         List<ChessPiece> captured = new ArrayList<>();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println();
             System.out.println("Program terminated by player");
         }));
 
