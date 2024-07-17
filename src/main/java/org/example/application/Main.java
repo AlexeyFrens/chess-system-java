@@ -18,6 +18,10 @@ public class Main {
         ChessMatch chessMatch = new ChessMatch();
         List<ChessPiece> captured = new ArrayList<>();
 
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Program terminated by player");
+        }));
+
         while(!chessMatch.getCheckMate()){
             try {
                 UI.clearScreen();
