@@ -1,12 +1,15 @@
 package org.example.chess;
 
+import org.example.application.UI;
 import org.example.boardGame.Board;
 import org.example.boardGame.Piece;
 import org.example.boardGame.Position;
 import org.example.chess.pieces.*;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Scanner;
 
 public class ChessMatch {
 
@@ -302,6 +305,73 @@ public class ChessMatch {
             }
         }
         return true;
+    }
+
+    public void testNewGame(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("New game (S/N)? ");
+        String decision = scanner.nextLine().toUpperCase();
+
+        while(!decision.equals("S") && !decision.equals("N")){
+            System.out.println("Invalid value!");
+            System.out.print("New game (S/N)? ");
+            decision = scanner.nextLine().toUpperCase();
+        }
+
+        if(decision.equals("S")){
+            newGame();
+        }else{
+            System.exit(0);
+        }
+    }
+
+    private void newGame(){
+        Scanner scanner = new Scanner(System.in);
+        checkMate = false;
+
+        ChessMatch chessMatch = new ChessMatch();
+        List<ChessPiece> captured = new ArrayList<>();
+
+        while(!getCheckMate()){
+            try {
+                UI.clearScreen();
+                UI.printMatch(chessMatch, captured);
+                System.out.println();
+                System.out.print("Source: ");
+                ChessPosition source = UI.readChessPosition(scanner);
+
+                boolean[][] possibleMoves = chessMatch.possibleMoves(source);
+                UI.clearScreen();
+                UI.printBoard(chessMatch.getPieces(), possibleMoves);
+
+                System.out.println();
+                System.out.print("Target: ");
+                ChessPosition target = UI.readChessPosition(scanner);
+
+                ChessPiece capturedPiece = chessMatch.performChessMove(source, target);
+
+                if(capturedPiece != null){
+                    captured.add(capturedPiece);
+                }
+
+                if(chessMatch.getPromoted() != null){
+                    System.out.println();
+                    System.out.print("Enter piece for promotion (B/N/R/Q) ");
+                    String type = scanner.nextLine().toUpperCase();
+
+                    while(!type.equals("B") && !type.equals("N") && !type.equals("R") & !type.equals("Q")){
+                        System.out.print("Invalid value! Enter piece for promotion (B/N/R/Q) ");
+                        type = scanner.nextLine().toUpperCase();
+                    }
+                    chessMatch.replacePromotedPiece(type);
+                }
+            }catch (ChessException | InputMismatchException e){
+                System.out.println(e.getMessage());
+                scanner.nextLine();
+            }
+        }
+        UI.clearScreen();
+        UI.printMatch(chessMatch, captured);
     }
 
     private void placeNewPiece(char column, int row, ChessPiece piece){

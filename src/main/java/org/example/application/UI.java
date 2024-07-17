@@ -63,6 +63,7 @@ public class UI {
         }else{
             System.out.println("CHECKMATE!");
             System.out.println("Winner: " + chessMatch.getCurrentPlayer());
+            chessMatch.testNewGame();
         }
 
     }
